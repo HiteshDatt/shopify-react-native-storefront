@@ -9,7 +9,7 @@ import { LineItemType } from "@/BuySDKWrapper/types";
 import { Link } from "expo-router";
 
 export default function CartScreen() {
-  const { cart } = useCart();
+  const { cart, isCartLoading } = useCart();
 
   return (
     <ParallaxScrollView
@@ -18,42 +18,52 @@ export default function CartScreen() {
         <Ionicons size={310} name="code-slash" style={styles.headerImage} />
       }
     >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Cart</ThemedText>
-      </ThemedView>
-      <ThemedView>
-        {cart?.lineItems?.map((lineItem: LineItemType, idx: number) => {
-          return (
-            <ThemedView style={styles.cartItem} key={idx}>
-              {lineItem?.variant?.image?.src && (
-                <Image
-                  style={styles.image}
-                  source={lineItem?.variant?.image?.src}
-                  // placeholder={{ blurhash }}
-                  contentFit="cover"
-                  transition={1000}
-                />
-              )}
-              <ThemedText type="subtitle">
-                {lineItem?.title} - {lineItem?.variant?.title}
-              </ThemedText>
-              <ThemedText type="subtitle">
-                {lineItem?.variant?.price?.currencyCode}{" "}
-                {lineItem?.variant?.price?.amount}
-              </ThemedText>
-              <ThemedText type="subtitle">Qty: {lineItem?.quantity}</ThemedText>
-            </ThemedView>
-          );
-        }) || (
-          <>
-            <ThemedText type="subtitle">Empty cart</ThemedText>
-          </>
-        )}
-      </ThemedView>
-      {cart?.lineItems ? (
-        <Link href="/checkout">Proceed To Checkout</Link>
+      {isCartLoading ? (
+        <ThemedText type="subtitle">Loading...</ThemedText>
       ) : (
-        <></>
+        <>
+          <ThemedView style={styles.titleContainer}>
+            <ThemedText type="title">Cart</ThemedText>
+          </ThemedView>
+          <ThemedView>
+            {cart?.lineItems?.map((lineItem: LineItemType, idx: number) => {
+              return (
+                <ThemedView style={styles.cartItem} key={idx}>
+                  {lineItem?.variant?.image?.src && (
+                    <Image
+                      style={styles.image}
+                      source={lineItem?.variant?.image?.src}
+                      // placeholder={{ blurhash }}
+                      contentFit="cover"
+                      transition={1000}
+                    />
+                  )}
+                  <ThemedText type="subtitle">
+                    {lineItem?.title} - {lineItem?.variant?.title}
+                  </ThemedText>
+                  <ThemedText type="subtitle">
+                    {lineItem?.variant?.price?.currencyCode}{" "}
+                    {lineItem?.variant?.price?.amount}
+                  </ThemedText>
+                  <ThemedText type="subtitle">
+                    Qty: {lineItem?.quantity}
+                  </ThemedText>
+                </ThemedView>
+              );
+            }) || (
+              <>
+                <ThemedText type="subtitle">Empty cart</ThemedText>
+              </>
+            )}
+          </ThemedView>
+          {cart?.lineItems ? (
+            <Link style={styles.checkoutBtn} href="/checkout">
+              Proceed To Checkout
+            </Link>
+          ) : (
+            <></>
+          )}
+        </>
       )}
     </ParallaxScrollView>
   );
@@ -78,5 +88,13 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
+  },
+  checkoutBtn: {
+    fontWeight: "bold",
+    fontSize: 20,
+    backgroundColor: "#841584",
+    color: "#fff",
+    textAlign: "center",
+    padding: 10,
   },
 });

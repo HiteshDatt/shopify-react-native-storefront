@@ -31,7 +31,20 @@ export const useCart = () => {
     setIsCartLoading(false);
   };
 
-  return { cart, addItemToCart, isCartLoading };
+  const fetchLatestCartDetails = async () => {
+    setIsCartLoading(true);
+    if (cart?.id) {
+      const res = await BuySDKClient.checkout.fetch(cart?.id);
+      if (res?.order?.id) {
+        setCart(null);
+      } else {
+        setCart(res);
+      }
+    }
+    setIsCartLoading(false);
+  };
+
+  return { cart, addItemToCart, isCartLoading, fetchLatestCartDetails };
 };
 
 export default useCart;
