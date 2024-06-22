@@ -9,6 +9,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useCart } from "@/BuySDKWrapper";
 import { useEffect } from "react";
 import { LineItemType } from "@/BuySDKWrapper/types";
+import { Link } from "expo-router";
 
 export default function CartScreen() {
   const { cart } = useCart();
@@ -37,6 +38,7 @@ export default function CartScreen() {
           );
         })}
       </ThemedText>
+      <Link href="/checkout">Proceed To Checkout</Link>
     </ParallaxScrollView>
   );
 }
