@@ -1,4 +1,5 @@
 import { Image, StyleSheet, Button } from "react-native";
+import { Image as ExpoImage } from "expo-image";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -16,6 +17,14 @@ export default function HomeScreen() {
         return {
           id: product.variants[0].id,
           title: `${product.title} - ${product.variants[0].title}`,
+          image: {
+            url: product?.variants?.[0]?.image?.url,
+            src: product?.variants?.[0]?.image?.src,
+          },
+          price: {
+            amount: product?.variants?.[0]?.price?.amount,
+            currencyCode: product?.variants?.[0]?.price?.currencyCode,
+          },
         };
       });
       setProducts(productVariantsList);
@@ -27,12 +36,10 @@ export default function HomeScreen() {
       {
         variantId: productVariantID,
         quantity: 1,
-        // customAttributes: [{key: "MyKey", value: "MyValue"}]
       },
     ];
     addItemToCart(lineItemsToAdd);
   };
-
 
   return (
     <ParallaxScrollView
@@ -44,10 +51,22 @@ export default function HomeScreen() {
         />
       }
     >
-      {products?.map((product: any,idx:number) => {
+      {products?.map((product: any, idx: number) => {
         return (
           <ThemedView style={styles.stepContainer} key={idx}>
+            {product?.image?.src && (
+              <ExpoImage
+                style={styles.image}
+                source={product.image.src}
+                // placeholder={{ blurhash }}
+                contentFit="cover"
+                transition={1000}
+              />
+            )}
             <ThemedText type="subtitle">{product.title}</ThemedText>
+            <ThemedText type="subtitle">
+              {product.price.currencyCode} {product.price.amount}
+            </ThemedText>
             <Button
               onPress={() => onPressLearnMore(product.id)}
               title="Add To Cart"
@@ -69,6 +88,8 @@ const styles = StyleSheet.create({
   stepContainer: {
     gap: 8,
     marginBottom: 8,
+    borderWidth: 2,
+    borderColor: "black",
   },
   reactLogo: {
     height: 178,
@@ -76,5 +97,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: "absolute",
+  },
+  image: {
+    width: "100%",
+    height: 300,
   },
 });
