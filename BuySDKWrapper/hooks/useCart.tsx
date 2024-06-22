@@ -9,9 +9,10 @@ export const useCart = () => {
     throw new Error("useCart must be used within CartProvider");
   }
 
-  const { cart, setCart } = context;
+  const { cart, setCart, isCartLoading, setIsCartLoading } = context;
 
   const addItemToCart = async (lineItemsToAdd: LineItemsToAddType[]) => {
+    setIsCartLoading(true);
     if (cart?.id) {
       const res = await BuySDKClient.checkout.addLineItems(
         cart?.id,
@@ -27,9 +28,10 @@ export const useCart = () => {
       );
       setCart(addItemRes);
     }
+    setIsCartLoading(false);
   };
 
-  return { cart, addItemToCart };
+  return { cart, addItemToCart, isCartLoading };
 };
 
 export default useCart;

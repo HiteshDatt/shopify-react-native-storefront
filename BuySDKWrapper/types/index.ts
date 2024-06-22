@@ -3,6 +3,8 @@ type Cart = any;
 type CartContextType = {
   cart: Cart | null;
   setCart: (args?: any) => void;
+  isCartLoading: boolean;
+  setIsCartLoading: (args?: any) => void;
 };
 
 type LineItemsToAddType = {

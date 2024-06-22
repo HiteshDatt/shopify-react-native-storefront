@@ -1,10 +1,8 @@
-import { Image, StyleSheet, Button } from "react-native";
-import { Image as ExpoImage } from "expo-image";
+import { Image, StyleSheet } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { useEffect, useState } from "react";
 import { BuySDKClient, useCart } from "@/BuySDKWrapper";
+import { ProductCard } from "@/components/ProductCard";
 
 export default function HomeScreen() {
   const [products, setProducts] = useState<any>(null);
@@ -31,16 +29,6 @@ export default function HomeScreen() {
     })();
   }, []);
 
-  const onPressLearnMore = (productVariantID: string) => {
-    const lineItemsToAdd = [
-      {
-        variantId: productVariantID,
-        quantity: 1,
-      },
-    ];
-    addItemToCart(lineItemsToAdd);
-  };
-
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -52,28 +40,7 @@ export default function HomeScreen() {
       }
     >
       {products?.map((product: any, idx: number) => {
-        return (
-          <ThemedView style={styles.stepContainer} key={idx}>
-            {product?.image?.src && (
-              <ExpoImage
-                style={styles.image}
-                source={product.image.src}
-                // placeholder={{ blurhash }}
-                contentFit="cover"
-                transition={1000}
-              />
-            )}
-            <ThemedText type="subtitle">{product.title}</ThemedText>
-            <ThemedText type="subtitle">
-              {product.price.currencyCode} {product.price.amount}
-            </ThemedText>
-            <Button
-              onPress={() => onPressLearnMore(product.id)}
-              title="Add To Cart"
-              color="#841584"
-            />
-          </ThemedView>
-        );
+        return <ProductCard product={product} key={idx} />;
       })}
     </ParallaxScrollView>
   );
