@@ -30,6 +30,9 @@ jobs:
         run: |
              npm i -g corepack
              npm install
+
+      - name: Expo Prebuild
+        run: |
              npx expo prebuild
       
       - name: Make Gradlew Executable

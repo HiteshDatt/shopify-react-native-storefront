@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier" :"com.hiteshdatt.shopifystorefront"
     },
     "android": {
       "adaptiveIcon": {
