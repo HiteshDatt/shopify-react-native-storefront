@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install Java
         uses: actions/setup-java@v4
@@ -31,6 +31,7 @@ jobs:
         run: |
              npm i -g corepack
              npm install
+             npx expo prebuild
       
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
