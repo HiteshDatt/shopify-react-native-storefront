@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: 17
-          distribution: adopt
+          distribution: zulu
 
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v3
