@@ -23,7 +23,7 @@ export default function CartScreen() {
       ) : (
         <>
           <ThemedView style={styles.titleContainer}>
-            <ThemedText type="title">Cart</ThemedText>
+            <ThemedText type="title">My Cart</ThemedText>
           </ThemedView>
           <ThemedView>
             {cart?.lineItems?.map((lineItem: LineItemType, idx: number) => {
