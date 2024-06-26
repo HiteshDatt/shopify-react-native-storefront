@@ -1,0 +1,75 @@
+name: "Build Android aab"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: adopt
+
+      - name: Setup Node  
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run NPM Install
+        run: |
+             npm i -g corepack
+             npm install
+
+      - name: Expo Prebuild
+        run: |
+             npx expo prebuild
+      
+      - name: Make Gradlew Executable
+        run: cd android && chmod +x ./gradlew
+
+      - name: Build application
+        run: |
+             cd android
+             ./gradlew bundleRelease
+
+      - name: Setup build tool version variable
+        shell: bash
+        run: |
+          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
+          echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
+          echo Last build tool version is: $BUILD_TOOL_VERSION
+      
+      # - name: Sign App Bundle
+      #   id: sign_app
+      #   uses: r0adkll/sign-android-release@v1
+      #   with:
+      #     releaseDirectory: android/app/build/outputs/apk/release
+      #     signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+      #     alias: ${{ secrets.ANDROID_SIGNING_ALIAS }}
+      #     keyStorePassword: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
+      #     keyPassword: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+      #   env:
+      #     BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
+
+      # - name: Upload Signed application
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: app-release-signed-aab
+      #     path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+      #     retention-days: 3
+
+      - name: Upload Unsigned application
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-unsigned-aab
+          path: android/app/build/outputs/bundle/release
+          retention-days: 3
